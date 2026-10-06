@@ -26,6 +26,12 @@ export default function AppTabs() {
           </TabTrigger>  
          <TabTrigger name="calculadoras" href="/calculadoras" asChild>
             <TabButton>calculadoras</TabButton>
+            </TabTrigger>
+            <TabTrigger name="pitagoras" href="/calculadoras/pitagoras" asChild>
+            <TabButton>pitagoras</TabButton>
+            </TabTrigger>
+            <TabTrigger name="bhaskara" href="/calculadoras/bhaskara" asChild>
+            <TabButton>bhaskara</TabButton>
           </TabTrigger>
           <TabTrigger name="explore" href="/explore" asChild>
             <TabButton>Explore</TabButton>
