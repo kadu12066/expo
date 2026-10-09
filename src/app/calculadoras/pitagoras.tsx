@@ -14,9 +14,24 @@ import { useState } from 'react';
 
 export default function PitagorasScreen() {  
 
-  let [catetoA, onChangeCatetoA] = useState("catetoA");
-  let[catetoB, onChangeCatetoB] = useState("catetoB");
-  let [hipotenusa, onChangeHipotenusa] = useState ("hipotenusa");
+  const [catetoA, onChangeCatetoA] = useState("catetoA");
+  const[catetoB, onChangeCatetoB] = useState("catetoB");
+  const [hipotenusa, onChangeHipotenusa] = useState ("hipotenusa");
+  
+  const calc = () =>{
+if (hipotenusa === ""){
+  resultado = (catetoA**2 + catetoB**2)**0.5;
+}
+
+else if (catetoA === ""){
+  resultado = (hipotenusa**2 - catetoB**2)**0.5;
+}
+
+else if (catetoB === ""){
+   resultado = (hipotenusa**2 - catetoA**2)**0.5;
+}
+  }
+
 let resultado = 0 
   return (
 
@@ -44,54 +59,6 @@ let resultado = 0
         </ThemedView>
         </SafeAreaView>
         </ThemedView>
-
-
-if (hipotenusa = ""){
-  resultado = (catetoA**2 + catetoB**2)**0.5;
-}
-
-else if (catetoA == ""){
-  resultado = (hipotenusa**2 - catetoB**2)**0.5;
-}
-
-else if (catetoB == ""){
-   resultado = (hipo**2 - catA**2)**0.5;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   )
   }
