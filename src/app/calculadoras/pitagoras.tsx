@@ -1,65 +1,102 @@
 import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet , TextInput, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { View, Text,  } from 'react-native';
 import { AnimatedIcon } from '@/components/animated-icon';
 import { HintRow } from '@/components/hint-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { useState } from 'react';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
 
-export default function HomeScreen() {
+
+export default function PitagorasScreen() {  
+
+  let [catetoA, onChangeCatetoA] = useState("catetoA");
+  let[catetoB, onChangeCatetoB] = useState("catetoB");
+  let [hipotenusa, onChangeHipotenusa] = useState ("hipotenusa");
+let resultado = 0 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Pitagoras 
-          </ThemedText>
+
+
+      <ThemedView style={styles.container}>
+        <SafeAreaView style={styles.safeArea}>
+          <ThemedView style={styles.heroSection}>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeCatetoA}
+          value={catetoA}
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeCatetoB}
+          value={catetoB}
+          keyboardType="numeric"
+        />
+           <TextInput
+          style={styles.input}
+          onChangeText={onChangeHipotenusa}
+          value={hipotenusa}
+          keyboardType="numeric"
+        />
+        </ThemedView>
+        </SafeAreaView>
         </ThemedView>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
+if (hipotenusa = ""){
+  resultado = (catetoA**2 + catetoB**2)**0.5;
 }
+
+else if (catetoA == ""){
+  resultado = (hipotenusa**2 - catetoB**2)**0.5;
+}
+
+else if (catetoB == ""){
+   resultado = (hipo**2 - catA**2)**0.5;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  )
+  }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -94,5 +131,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.four,
     borderRadius: Spacing.four,
+  },
+    input: {
+    flex: 0,
+    justifyContent: 'center',
+    borderWidth:1,
+    flexDirection: 'row',
   },
 });
