@@ -1,38 +1,51 @@
 import * as Device from 'expo-device';
-import { Platform, StyleSheet , TextInput, useColorScheme } from 'react-native';
+import { Platform, StyleSheet ,  TextInput, useColorScheme,Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text,  } from 'react-native';
+import { View, Text, } from 'react-native';
 import { AnimatedIcon } from '@/components/animated-icon';
 import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
+import { ThemedText} from '@/components/themed-text';
+import { ThemedView  } from '@/components/themed-view';
+import { WebBadge} from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useState } from 'react';
+import { Host,  useNativeState } from '@expo/ui';
 
 
+export function Calcular (){
+  return(
+(PitagorasScreen()) 
+
+)}
 
 export default function PitagorasScreen() {  
 
-  const [catetoA, onChangeCatetoA] = useState("catetoA");
-  const[catetoB, onChangeCatetoB] = useState("catetoB");
-  const [hipotenusa, onChangeHipotenusa] = useState ("hipotenusa");
-  
-  const calc = () =>{
-if (hipotenusa === ""){
+  const [catetoA, onChangeCatetoA] = useState(0);
+  const[catetoB, onChangeCatetoB] = useState(0);
+  const [hipotenusa, onChangeHipotenusa] = useState (0);
+
+    let resultado = 0
+
+         const 
+          calc = () =>{
+if (hipotenusa == 0){
   resultado = (catetoA**2 + catetoB**2)**0.5;
+   console.log(resultado)
 }
 
-else if (catetoA === ""){
+
+else if (catetoA == 0){
   resultado = (hipotenusa**2 - catetoB**2)**0.5;
+   console.log(resultado)
 }
 
-else if (catetoB === ""){
+else if (catetoB == 0){
    resultado = (hipotenusa**2 - catetoA**2)**0.5;
+   console.log(resultado)
 }
   }
-
-let resultado = 0 
+ 
+ 
   return (
 
 
@@ -56,12 +69,19 @@ let resultado = 0
           value={hipotenusa}
           keyboardType="numeric"
         />
+
+        <Button title="Calcular" onPress={calc}/>
+
         </ThemedView>
         </SafeAreaView>
         </ThemedView>
 
+
   )
+
+
   }
+
 
 
 
@@ -105,4 +125,6 @@ const styles = StyleSheet.create({
     borderWidth:1,
     flexDirection: 'row',
   },
+
+
 });
