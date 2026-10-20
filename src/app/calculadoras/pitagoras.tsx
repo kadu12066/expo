@@ -10,13 +10,8 @@ import { WebBadge} from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useState } from 'react';
 import { Host,  useNativeState } from '@expo/ui';
+import { calculateNewStiffnessToMatchDuration } from 'react-native-reanimated/lib/typescript/animation/spring';
 
-
-export function Calcular (){
-  return(
-(PitagorasScreen()) 
-
-)}
 
 export default function PitagorasScreen() {  
 
@@ -26,32 +21,51 @@ export default function PitagorasScreen() {
 
     let resultado = 0
 
-         const 
-          calc = () =>{
+   
+  const   calc = () =>{
 if (hipotenusa == 0){
   resultado = (catetoA**2 + catetoB**2)**0.5;
    console.log(resultado)
+   alert (`o resultado da hipotenusa é: ${resultado.toFixed(4)}`)
 }
 
 
-else if (catetoA == 0){
+else if (catetoA == 0){   
   resultado = (hipotenusa**2 - catetoB**2)**0.5;
    console.log(resultado)
+   alert (`o resultado do catetoA é: ${resultado.toFixed(4)}`)
 }
 
 else if (catetoB == 0){
    resultado = (hipotenusa**2 - catetoA**2)**0.5;
    console.log(resultado)
+   alert (`o resultado do catetoB é: ${resultado.toFixed(4)}`)
 }
+
+else if (resultado < 0){
+  alert ("resultado nao exixte (resultado é negativo")
+}
+
+else{
+  console.log ("algo esta errado ")
+  alert (`algo esta errado `)
+}
+
   }
  
  
   return (
+    
 
 
       <ThemedView style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <ThemedView style={styles.heroSection}>
+
+            <ThemedText type = "subtitle">
+              teorema de pitagoras
+            </ThemedText>
+
         <TextInput
           style={styles.input}
           onChangeText={onChangeCatetoA}
@@ -71,6 +85,7 @@ else if (catetoB == 0){
         />
 
         <Button title="Calcular" onPress={calc}/>
+        
 
         </ThemedView>
         </SafeAreaView>
