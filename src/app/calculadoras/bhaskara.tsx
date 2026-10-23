@@ -3,7 +3,7 @@ import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import * as Device from 'expo-device';
 import { useState } from 'react';
-import { Platform, StyleSheet, TextInput } from 'react-native';
+import { Button, Platform, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function getDevMenuHint() {
@@ -26,30 +26,69 @@ function getDevMenuHint() {
 }
 
 export default function BhaskaraScreen() {  
-  const [text, onChangeText] = useState('Useless Text');
-  const [number, onChangeNumber] = useState('');
+  const [a, onChangeA] = useState(0);
+  const [b, onChangeB] = useState(0);
+  const [c, onChangeC] = useState (0);
+let delta = (b**2 - 4*a*c)
+
+let resultado = ((-b + (delta)**0.5)/(2*a))
+
+const   calc = () =>{
+
+
+if (delta<0){
+  alert ("resultado nao exite (delta é negativo)")
+}
+
+else if (delta == 0){
+  resultado = ((-b*-1/(2*a)))
+  alert (`Existe apenas uma raiz real: ${resultado.toFixed(2)}`)
+}
+
+else {
+  let resultado2 = ((-b - (delta)**0.5)/(2*a))
+  alert (`As raízes reais são: ${resultado.toFixed(2)} e ${resultado2.toFixed(2)}`)
+}
+}
 
   return (
       <ThemedView style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <ThemedView style={styles.heroSection}>
+
+          <ThemedText type = "subtitle">
+              bhaskara
+          </ThemedText>
+ 
         <TextInput
           style={styles.input}
-          onChangeText={onChangeText}
-          value={text}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeNumber}
-          value={number}
-          placeholder="useless placeholder"
+          onChangeText={onChangeA}
+          value={a.toString()}
+          placeholder="Enter A"
           keyboardType="numeric"
         />
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeB}
+          value={b.toString()}
+          placeholder="Enter B"
+          keyboardType="numeric"
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeC}
+          value={c.toString()}
+          placeholder="Enter C"
+          keyboardType="numeric"
+        />
+        
+        <Button title="Calcular" onPress={calc}/>
         </ThemedView>
         </SafeAreaView>
         </ThemedView>
   );
 };
+
 
  
 
@@ -86,10 +125,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.four,
     borderRadius: Spacing.four,
-  },  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
   },
+    input: {
+    flex: 0,
+    justifyContent: 'center',
+    borderWidth:1,
+    flexDirection: 'row',
+  },
+
+
 });
