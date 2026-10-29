@@ -1,137 +1,203 @@
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import * as Device from 'expo-device';
 import { useState } from 'react';
-import { Button, Platform, StyleSheet, TextInput } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {  
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+export default function BhaskaraScreen() {
+  const [a, onChangeA] = useState('');
+  const [b, onChangeB] = useState('');
+  const [c, onChangeC] = useState('');
 
-export default function BhaskaraScreen() {  
-  const [a, onChangeA] = useState(0);
-  const [b, onChangeB] = useState(0);
-  const [c, onChangeC] = useState (0);
-let delta = (b**2 - 4*a*c)
+  const calc = () => {
+    if ([a, b, c].some((value) => value.trim() === '')) {
+      alert('Preencha os três coeficientes.');
+      return;
+    }
 
-let resultado = ((-b + (delta)**0.5)/(2*a))
+    const coeficienteA = Number(a);
+    const coeficienteB = Number(b);
+    const coeficienteC = Number(c);
+    const delta = coeficienteB ** 2 - 4 * coeficienteA * coeficienteC;
 
-const   calc = () =>{
-
-
-if (delta<0){
-  alert ("resultado nao exite (delta é negativo)")
-}
-
-else if (delta == 0){
-  resultado = ((-b*-1/(2*a)))
-  alert (`Existe apenas uma raiz real: ${resultado.toFixed(2)}`)
-}
-
-else {
-  let resultado2 = ((-b - (delta)**0.5)/(2*a))
-  alert (`As raízes reais são: ${resultado.toFixed(2)} e ${resultado2.toFixed(2)}`)
-}
-}
+    if (coeficienteA === 0) {
+      alert('O coeficiente A precisa ser diferente de zero.');
+    } else if (delta < 0) {
+      alert('Não existem raízes reais porque o delta é negativo.');
+    } else if (delta === 0) {
+      const resultado = -coeficienteB / (2 * coeficienteA);
+      alert(`Existe apenas uma raiz real: ${resultado.toFixed(2)}`);
+    } else {
+      const resultado1 = (-coeficienteB + Math.sqrt(delta)) / (2 * coeficienteA);
+      const resultado2 = (-coeficienteB - Math.sqrt(delta)) / (2 * coeficienteA);
+      alert(`As raízes reais são: ${resultado1.toFixed(2)} e ${resultado2.toFixed(2)}`);
+    }
+  };
 
   return (
-      <ThemedView style={styles.container}>
-        <SafeAreaView style={styles.safeArea}>
-          <ThemedView style={styles.heroSection}>
-
-          <ThemedText type = "subtitle">
-              bhaskara
+    <ThemedView style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <ThemedView style={styles.content}>
+          <ThemedText style={styles.title}>Fórmula de Bhaskara</ThemedText>
+          <ThemedText style={styles.description}>
+            Encontre as raízes da equação do segundo grau.
           </ThemedText>
- 
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeA}
-          value={a.toString()}
-          placeholder="Enter A"
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeB}
-          value={b.toString()}
-          placeholder="Enter B"
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeC}
-          value={c.toString()}
-          placeholder="Enter C"
-          keyboardType="numeric"
-        />
-        
-        <Button title="Calcular" onPress={calc}/>
+
+          <ThemedView style={styles.formCard}>
+            <ThemedText style={styles.sectionLabel}>COEFICIENTES</ThemedText>
+            <ThemedText style={styles.helper}>
+              Preencha os valores de ax² + bx + c = 0
+            </ThemedText>
+
+            <ThemedView style={styles.fields}>
+              <ThemedView style={styles.field}>
+                <ThemedText style={styles.fieldLabel}>Valor de A</ThemedText>
+                <TextInput
+                  accessibilityLabel="Valor de A"
+                  style={styles.input}
+                  onChangeText={onChangeA}
+                  value={a}
+                  placeholder="Ex.: 1"
+                  placeholderTextColor="#777986"
+                  keyboardType="numeric"
+                  selectionColor="#A78BFA"
+                />
+              </ThemedView>
+              <ThemedView style={styles.field}>
+                <ThemedText style={styles.fieldLabel}>Valor de B</ThemedText>
+                <TextInput
+                  accessibilityLabel="Valor de B"
+                  style={styles.input}
+                  onChangeText={onChangeB}
+                  value={b}
+                  placeholder="Ex.: -5"
+                  placeholderTextColor="#777986"
+                  keyboardType="numeric"
+                  selectionColor="#A78BFA"
+                />
+              </ThemedView>
+              <ThemedView style={styles.field}>
+                <ThemedText style={styles.fieldLabel}>Valor de C</ThemedText>
+                <TextInput
+                  accessibilityLabel="Valor de C"
+                  style={styles.input}
+                  onChangeText={onChangeC}
+                  value={c}
+                  placeholder="Ex.: 6"
+                  placeholderTextColor="#777986"
+                  keyboardType="numeric"
+                  selectionColor="#A78BFA"
+                />
+              </ThemedView>
+            </ThemedView>
+
+            <Pressable
+              accessibilityRole="button"
+              onPress={calc}
+              style={({ pressed }) => [styles.calculateButton, pressed && styles.buttonPressed]}>
+              <Text style={styles.calculateButtonText}>Calcular raízes</Text>
+            </Pressable>
+          </ThemedView>
         </ThemedView>
-        </SafeAreaView>
-        </ThemedView>
+      </SafeAreaView>
+    </ThemedView>
   );
-};
-
-
- 
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: '#111218',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
+    width: '100%',
     maxWidth: MaxContentWidth,
+    alignSelf: 'center',
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.three,
+    paddingBottom: BottomTabInset + Spacing.three,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  content: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    width: '100%',
+    maxWidth: 440,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    gap: Spacing.two,
+    backgroundColor: 'transparent',
   },
   title: {
+    color: '#F6F4FF',
+    fontSize: 28,
+    lineHeight: 36,
+    fontWeight: '700',
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  description: {
+    color: '#A5A5B2',
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: 'center',
+    marginBottom: Spacing.two,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
+  formCard: {
+    padding: Spacing.three,
+    gap: Spacing.two,
+    borderRadius: 28,
+    backgroundColor: '#1B1C24',
+  },
+  sectionLabel: {
+    color: '#A78BFA',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.8,
+  },
+  helper: {
+    color: '#9293A1',
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  fields: {
+    gap: Spacing.two,
+    marginTop: Spacing.one,
+    marginBottom: Spacing.one,
+    backgroundColor: 'transparent',
+  },
+  field: {
+    gap: Spacing.one,
+    backgroundColor: 'transparent',
+  },
+  fieldLabel: {
+    color: '#E8E6F0',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  input: {
+    minHeight: 54,
     paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+    borderWidth: 1,
+    borderColor: '#393A46',
+    borderRadius: 16,
+    backgroundColor: '#252630',
+    color: '#FFFFFF',
+    fontSize: 17,
   },
-    input: {
-    flex: 0,
+  calculateButton: {
+    minHeight: 56,
+    alignItems: 'center',
     justifyContent: 'center',
-    borderWidth:1,
-    flexDirection: 'row',
+    borderRadius: 16,
+    backgroundColor: '#8B5CF6',
   },
-
-
+  buttonPressed: {
+    opacity: 0.75,
+    transform: [{ scale: 0.98 }],
+  },
+  calculateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
 });

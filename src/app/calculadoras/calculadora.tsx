@@ -1,151 +1,237 @@
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import * as Device from 'expo-device';
 import { useState } from 'react';
-import { Button, Platform, StyleSheet, TextInput } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
 
+type CalculatorKeyProps = {
+  label: string;
+  onPress: () => void;
+  variant?: 'number' | 'operator' | 'equals';
+  wide?: boolean;
+};
 
-export default function CalculadoraScreen () {  
+function CalculatorKey({
+  label,
+  onPress,
+  variant = 'number',
+  wide = false,
+}: CalculatorKeyProps) {
+  const variantStyle: ViewStyle =
+    variant === 'equals'
+      ? styles.equalsKey
+      : variant === 'operator'
+        ? styles.operatorKey
+        : styles.numberKey;
 
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.key,
+        variantStyle,
+        wide && styles.wideKey,
+        pressed && styles.keyPressed,
+      ]}>
+      <Text style={styles.keyText}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export default function CalculadoraScreen() {
   const [calcDisplay, setCalcDisplay] = useState("");
   const [operacao, setOperacao] = useState("");
   const [memoria, setMemoria] = useState(0);
 
+  const handleNumberPress = (number: string) => {
+    setCalcDisplay((prevDisplay) => prevDisplay + number);
+  }
 
-
-const handleNumberPress = (number: string) => {
-  setCalcDisplay((prevDisplay) => prevDisplay + number);
-}
-const handleOperationPress = (operation: string) => {
-  if(operation === "+" || operation === "-" || operation === "*" || operation === "/"){
-    if (calcDisplay !== "") {
-      setMemoria(parseFloat(calcDisplay));
-      setOperacao(operation);
-            console.log(`operation: ${operation}, valor: ${calcDisplay}, operacao: ${operacao}`);
-      setCalcDisplay("");
-    }
-  }else if (operation === "=") {
-    let valor = parseFloat(calcDisplay);
-    console.log(`memoria: ${memoria}, valor: ${valor}, operacao: ${operacao}`);
-    if(operacao === "+"){
-     let resultado = memoria + valor;
-      setCalcDisplay(resultado.toString());
-       setMemoria(0);
+  const handleOperationPress = (operation: string) => {
+    if (operation === "+" || operation === "-" || operation === "*" || operation === "/") {
+      if (calcDisplay !== "") {
+        setMemoria(parseFloat(calcDisplay));
+        setOperacao(operation);
+        setCalcDisplay("");
+      }
+    } else if (operation === "=") {
+      let valor = parseFloat(calcDisplay);
+      if (operacao === "+") {
+        let resultado = memoria + valor;
+        setCalcDisplay(resultado.toString());
+        setMemoria(0);
         setOperacao("");
+      } else if (operacao === "-") {
+        let resultado = memoria - valor;
+        setCalcDisplay(resultado.toString());
+        setMemoria(0);
+        setOperacao("");
+      } else if (operacao === "*") {
+        let resultado = memoria * valor;
+        setCalcDisplay(resultado.toString());
+        setMemoria(0);
+        setOperacao("");
+      } else if (operacao === "/") {
+        let resultado = memoria / valor;
+        setCalcDisplay(resultado.toString());
+        setMemoria(0);
+        setOperacao("");
+      }
     }
   }
-}
-  
 
-
- 
- 
   return (
     <ThemedView style={styles.container}>
-        <SafeAreaView style={styles.safeArea}>
-          <ThemedView style={styles.heroSection}>
+      <SafeAreaView style={styles.safeArea}>
+        <ThemedView style={styles.heroSection}>
+          <ThemedText style={styles.title}>Calculadora</ThemedText>
 
-            <ThemedText style={styles.subtitle}>
-              calculadora
-            </ThemedText>
-        
-        
-        <ThemedView style={styles.teclado}>
-            <ThemedView style={styles.teclado_linha}>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setCalcDisplay}
-                  value={calcDisplay}
-                  keyboardType="numeric"
-                />
-            </ThemedView>
-            <ThemedView style={styles.teclado_linha}>
-                <Button title="1" onPress={() => handleNumberPress('1')} /> <Button title="2" onPress={() => handleNumberPress('2')} /> <Button title="3" onPress={() => handleNumberPress('3')} />
-        <Button title="+" onPress={() => handleOperationPress('+')} />
-            </ThemedView>
-            <ThemedView style={styles.teclado_linha}>
-                <Button title="4" onPress={() => handleNumberPress('4')} /> <Button title="5" onPress={() => handleNumberPress('5')} /> <Button title="6" onPress={() => handleNumberPress('6')} />
-        <Button title="-" onPress={() => handleOperationPress('-')} />
-            </ThemedView>
-            <ThemedView style={styles.teclado_linha}>
-                <Button title="7" onPress={() => handleNumberPress('7')} /> <Button title="8" onPress={() => handleNumberPress('8')} /> <Button title="9" onPress={() => handleNumberPress('9')} />
-        <Button title="*" onPress={() => handleOperationPress('*')} />
-            </ThemedView>
-            <ThemedView style={styles.teclado_linha}>
-                <Button title="0" onPress={() => handleNumberPress('0')} />
-        <Button title="=" onPress={() => handleOperationPress('=')} /> 
+          <ThemedView style={styles.teclado}>
+            <ThemedView style={styles.displayCard}>
+              <ThemedText style={styles.displayLabel}>RESULTADO</ThemedText>
+              <TextInput
+                style={styles.input}
+                onChangeText={setCalcDisplay}
+                value={calcDisplay}
+                keyboardType="numeric"
+                placeholder="0"
+                placeholderTextColor="#777986"
+                selectionColor="#A78BFA"
+                accessibilityLabel="Visor da calculadora"
+              />
             </ThemedView>
 
+            <ThemedView style={styles.teclado_linha}>
+              <CalculatorKey label="1" onPress={() => handleNumberPress('1')} />
+              <CalculatorKey label="2" onPress={() => handleNumberPress('2')} />
+              <CalculatorKey label="3" onPress={() => handleNumberPress('3')} />
+              <CalculatorKey label="+" variant="operator" onPress={() => handleOperationPress('+')} />
+            </ThemedView>
+
+            <ThemedView style={styles.teclado_linha}>
+              <CalculatorKey label="4" onPress={() => handleNumberPress('4')} />
+              <CalculatorKey label="5" onPress={() => handleNumberPress('5')} />
+              <CalculatorKey label="6" onPress={() => handleNumberPress('6')} />
+              <CalculatorKey label="−" variant="operator" onPress={() => handleOperationPress('-')} />
+            </ThemedView>
+
+            <ThemedView style={styles.teclado_linha}>
+              <CalculatorKey label="7" onPress={() => handleNumberPress('7')} />
+              <CalculatorKey label="8" onPress={() => handleNumberPress('8')} />
+              <CalculatorKey label="9" onPress={() => handleNumberPress('9')} />
+              <CalculatorKey label="×" variant="operator" onPress={() => handleOperationPress('*')} />
+            </ThemedView>
+
+            <ThemedView style={styles.teclado_linha}>
+              <CalculatorKey label="0" wide onPress={() => handleNumberPress('0')} />
+              <CalculatorKey label="=" variant="equals" onPress={() => handleOperationPress('=')} />
+              <CalculatorKey label="÷" variant="operator" onPress={() => handleOperationPress('/')} />
+            </ThemedView>
+          </ThemedView>
         </ThemedView>
-
-        </ThemedView>
-        </SafeAreaView>
-        </ThemedView>
-
-
+      </SafeAreaView>
+    </ThemedView>
   );
-
-
-  }
-
-
-
+}
 
 const styles = StyleSheet.create({
-    teclado: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-    },
-    teclado_linha: {
-        gap: Spacing.four,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: '#111218',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
+    width: '100%',
     maxWidth: MaxContentWidth,
+    alignSelf: 'center',
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.three,
+    paddingBottom: BottomTabInset + Spacing.three,
   },
   heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
     flex: 1,
-    paddingHorizontal: Spacing.four,
+    width: '100%',
+    maxWidth: 440,
+    alignSelf: 'center',
+    justifyContent: 'center',
     gap: Spacing.four,
+    backgroundColor: 'transparent',
   },
   title: {
+    color: '#F6F4FF',
+    fontSize: 28,
+    lineHeight: 36,
+    fontWeight: '700',
+    letterSpacing: 0.3,
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  teclado: {
+    width: '100%',
+    padding: Spacing.three,
+    gap: Spacing.two,
+    borderRadius: 28,
+    backgroundColor: '#1B1C24',
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
+  teclado_linha: {
+    flexDirection: 'row',
+    gap: Spacing.two,
+    backgroundColor: 'transparent',
+  },
+  displayCard: {
+    minHeight: 132,
+    justifyContent: 'space-between',
     paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+    paddingVertical: Spacing.three,
+    marginBottom: Spacing.one,
+    borderRadius: 20,
+    backgroundColor: '#252630',
   },
-    input: {
+  displayLabel: {
+    color: '#9293A1',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.8,
+  },
+  input: {
+    width: '100%',
+    padding: 0,
+    color: '#FFFFFF',
+    fontSize: 42,
+    lineHeight: 52,
+    fontWeight: '500',
+    textAlign: 'right',
+  },
+  key: {
+    flex: 1,
+    minWidth: 0,
+    height: 66,
+    alignItems: 'center',
     justifyContent: 'center',
-    borderWidth:1,
-
+    borderRadius: 18,
   },
-
-
+  numberKey: {
+    backgroundColor: '#30313B',
+  },
+  operatorKey: {
+    backgroundColor: '#393344',
+  },
+  equalsKey: {
+    backgroundColor: '#8B5CF6',
+  },
+  wideKey: {
+    flex: 2,
+  },
+  keyPressed: {
+    opacity: 0.72,
+    transform: [{ scale: 0.97 }],
+  },
+  keyText: {
+    color: '#F7F5FF',
+    fontSize: 23,
+    fontWeight: '600',
+  },
 });
 
