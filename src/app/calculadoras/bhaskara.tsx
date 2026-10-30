@@ -1,16 +1,19 @@
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { calcDelta } from '@/utils/bhaskara';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 
 export default function BhaskaraScreen() {
   const [a, onChangeA] = useState('');
   const [b, onChangeB] = useState('');
   const [c, onChangeC] = useState('');
 
-  const calc = () => {
+   const calc = (): void => {
     if ([a, b, c].some((value) => value.trim() === '')) {
       alert('Preencha os três coeficientes.');
       return;
@@ -19,7 +22,7 @@ export default function BhaskaraScreen() {
     const coeficienteA = Number(a);
     const coeficienteB = Number(b);
     const coeficienteC = Number(c);
-    const delta = coeficienteB ** 2 - 4 * coeficienteA * coeficienteC;
+    const delta = calcDelta(coeficienteA, coeficienteB, coeficienteC);
 
     if (coeficienteA === 0) {
       alert('O coeficiente A precisa ser diferente de zero.');
